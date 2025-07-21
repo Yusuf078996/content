@@ -1,225 +1,763 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Login</title>
+    <title>VONZALE | Woven for kings, worn by visionaries</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style>
-        .hidden-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 30px;
-            height: 30px;
-            opacity: 0.1;
-            transition: opacity 0.3s;
+        :root {
+            --primary: #0a0a0a;
+            --secondary: #d4af37;
+            --accent: #c0c0c0;
+            --light: #f5f5f5;
         }
-        .hidden-btn:hover {
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Cinzel', serif;
+        }
+        
+        .cursor-trail {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212,175,55,0.8) 0%, rgba(212,175,55,0) 70%);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            mix-blend-mode: screen;
+        }
+        
+        .intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 1.5s ease-out;
+        }
+        
+        .intro-text {
+            font-size: 6vw;
+            color: var(--secondary);
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 2s forwards 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .golden-line {
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .golden-line:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary);
+        }
+        
+        .collection-card {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .collection-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .collection-card:hover .collection-overlay {
             opacity: 1;
         }
-        .password-input {
-            letter-spacing: 2px;
+        
+        .collection-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.3) 50%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .product-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-hover {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-align: center;
+            width: 80%;
+        }
+        
+        .product-card:hover .product-hover {
+            opacity: 1;
+        }
+        
+        .product-card:hover img {
+            filter: brightness(0.5);
+        }
+        
+        .wardrobe-item {
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+            padding: 1rem 0;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .menu-open {
+            transform: translateX(0);
+        }
+        
+        .menu-closed {
+            transform: translateX(100%);
+        }
+        
+        .mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        @media (max-width: 768px) {
+            .intro-text {
+                font-size: 12vw;
+                letter-spacing: 0.3em;
+            }
+            
+            .golden-line:after {
+                width: 30px;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--primary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 10px;
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(212,175,55,0.2);
+            border-top: 5px solid var(--secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* Mood selector */
+        .mood-option {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .mood-option:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(212,175,55,0.3);
+        }
+        
+        .mood-option.selected {
+            border: 2px solid var(--secondary);
+            box-shadow: 0 0 30px rgba(212,175,55,0.5);
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-    <!-- Main Login Form -->
-    <div id="loginForm" class="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
-        <div class="flex justify-center mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-16 h-16 text-pink-600">
-                <path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/>
-            </svg>
-        </div>
-        <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Instagram Login</h1>
-        
-        <form id="igForm" class="space-y-4">
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                <input type="text" id="username" name="username" required 
-                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
-            </div>
+<body class="relative">
+    <!-- Cursor trail -->
+    <div class="cursor-trail" id="cursor-trail"></div>
+    
+    <!-- Intro overlay -->
+    <div class="intro-overlay" id="intro-overlay">
+        <h1 class="intro-text">VONZALE</h1>
+        <div class="spinner"></div>
+    </div>
+    
+    <!-- Mobile menu -->
+    <div class="mobile-menu fixed top-0 right-0 h-full w-64 bg-black z-50 shadow-2xl p-6 menu-closed" id="mobile-menu">
+        <button class="absolute top-6 right-6 text-2xl text-secondary" id="close-menu">
+            <i class="fas fa-times"></i>
+        </button>
+        <nav class="mt-16">
+            <ul class="space-y-6">
+                <li><a href="#home" class="text-xl hover:text-secondary transition">Home</a></li>
+                <li><a href="#collections" class="text-xl hover:text-secondary transition">Collections</a></li>
+                <li><a href="#story" class="text-xl hover:text-secondary transition">Our Story</a></li>
+                <li><a href="#video" class="text-xl hover:text-secondary transition">Visual Story</a></li>
+                <li><a href="#wardrobe" class="text-xl hover:text-secondary transition">Your Wardrobe</a></li>
+                <li><a href="#contact" class="text-xl hover:text-secondary transition">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-40 bg-black bg-opacity-90 backdrop-blur-sm py-4 px-6 border-b border-secondary border-opacity-20">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#home" class="text-2xl font-bold text-secondary">VONZALE</a>
             
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                <input type="password" id="password" name="password" required 
-                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
-            </div>
+            <!-- Desktop nav -->
+            <nav class="hidden md:block">
+                <ul class="flex space-x-8">
+                    <li><a href="#home" class="hover:text-secondary transition">Home</a></li>
+                    <li><a href="#collections" class="hover:text-secondary transition">Collections</a></li>
+                    <li><a href="#story" class="hover:text-secondary transition">Our Story</a></li>
+                    <li><a href="#video" class="hover:text-secondary transition">Visual Story</a></li>
+                    <li><a href="#wardrobe" class="hover:text-secondary transition">Your Wardrobe</a></li>
+                    <li><a href="#contact" class="hover:text-secondary transition">Contact</a></li>
+                </ul>
+            </nav>
             
-            <button type="submit" 
-                    class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2 px-4 rounded-md hover:opacity-90 transition-opacity font-medium">
-                Log In
+            <!-- Mobile menu button -->
+            <button class="md:hidden text-xl" id="menu-button">
+                <i class="fas fa-bars"></i>
             </button>
-        </form>
-        
-        <div class="mt-6 text-center text-sm text-gray-600">
-            <p>Don't have an account? <a href="#" class="text-pink-600 font-medium">Sign up</a></p>
         </div>
-    </div>
-
-    <!-- Hidden Admin Button (Bottom Right Corner) -->
-    <button id="adminBtn" class="hidden-btn bg-blue-500 rounded-full"></button>
-
-    <!-- Password Verification Modal -->
-    <div id="passwordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg p-6 w-full max-w-sm">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">Admin Access</h2>
-            <p class="text-sm text-gray-600 mb-4">Enter admin password to continue:</p>
-            <input type="password" id="adminPassword" class="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 password-input" placeholder="••••••">
-            <div class="flex justify-end space-x-3">
-                <button id="cancelBtn" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
-                <button id="verifyBtn" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Verify</button>
+    </header>
+    
+    <!-- Main content -->
+    <main>
+        <!-- Hero section -->
+        <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+            <div class="absolute inset-0 bg-black opacity-50"></div>
+            <video autoplay muted loop class="absolute inset-0 w-full h-full object-cover -z-10">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-in-a-white-dress-walking-along-the-beach-3982-large.mp4" type="video/mp4">
+            </video>
+            
+            <div class="container mx-auto px-6 z-10 text-center">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-secondary">VONZALE</h1>
+                <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-8">Woven for kings, worn by visionaries. Every thread tells a secret.</p>
+                <a href="#collections" class="inline-block bg-secondary text-black px-8 py-3 font-bold hover:bg-opacity-90 transition">Explore Collections</a>
             </div>
-            <p id="passwordError" class="text-red-500 text-sm mt-2 hidden">Incorrect password</p>
-        </div>
-    </div>
-
-    <!-- Admin Dashboard -->
-    <div id="adminDashboard" class="bg-white rounded-lg shadow-md p-6 w-full max-w-4xl hidden">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
-            <button id="logoutBtn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">Logout</button>
-        </div>
+            
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+                <a href="#collections" class="text-secondary text-2xl">
+                    <i class="fas fa-chevron-down"></i>
+                </a>
+            </div>
+        </section>
         
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Password</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
-                    </tr>
-                </thead>
-                <tbody id="dataTableBody" class="bg-white divide-y divide-gray-200">
-                    <!-- Data will be inserted here -->
-                </tbody>
-            </table>
-        </div>
+        <!-- Collections section -->
+        <section id="collections" class="py-20 bg-black">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 golden-line inline-block">Our Collections</h2>
+                    <p class="max-w-2xl mx-auto mt-4">Discover the realms of VONZALE where each collection tells a unique story through fabric and form.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Collection 1 -->
+                    <div class="collection-card relative h-96 rounded-lg overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Midnight Sovereign Collection" class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
+                        <div class="collection-overlay">
+                            <h3 class="text-2xl font-bold text-secondary mb-2">Midnight Sovereign</h3>
+                            <p class="text-sm mb-4">Dark elegance redefined for the modern ruler</p>
+                            <a href="#" class="text-secondary font-bold hover:underline">Explore Collection</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Collection 2 -->
+                    <div class="collection-card relative h-96 rounded-lg overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Golden Epoch Collection" class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
+                        <div class="collection-overlay">
+                            <h3 class="text-2xl font-bold text-secondary mb-2">Golden Epoch</h3>
+                            <p class="text-sm mb-4">Timeless luxury for the ages</p>
+                            <a href="#" class="text-secondary font-bold hover:underline">Explore Collection</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Collection 3 -->
+                    <div class="collection-card relative h-96 rounded-lg overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1554412933-514a83d2f3c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Silent Monarch Collection" class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
+                        <div class="collection-overlay">
+                            <h3 class="text-2xl font-bold text-secondary mb-2">Silent Monarch</h3>
+                            <p class="text-sm mb-4">Power whispered in silver and silk</p>
+                            <a href="#" class="text-secondary font-bold hover:underline">Explore Collection</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         
-        <div class="mt-4 text-sm text-gray-500">
-            <p>Total entries: <span id="entryCount">0</span></p>
+        <!-- Mood selector section -->
+        <section class="py-20 bg-gradient-to-b from-black to-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 golden-line inline-block">Find Your Vibe</h2>
+                    <p class="max-w-2xl mx-auto mt-4">Select your current mood and let us curate pieces that resonate with your energy.</p>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                    <!-- Mood 1 -->
+                    <div class="mood-option p-6 rounded-lg bg-gray-900 text-center border border-gray-800 hover:border-secondary">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800 flex items-center justify-center text-2xl text-secondary">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h3 class="font-bold mb-2">Regal</h3>
+                        <p class="text-sm text-gray-400">Commanding presence</p>
+                    </div>
+                    
+                    <!-- Mood 2 -->
+                    <div class="mood-option p-6 rounded-lg bg-gray-900 text-center border border-gray-800 hover:border-secondary">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800 flex items-center justify-center text-2xl text-secondary">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <h3 class="font-bold mb-2">Mystique</h3>
+                        <p class="text-sm text-gray-400">Enigmatic allure</p>
+                    </div>
+                    
+                    <!-- Mood 3 -->
+                    <div class="mood-option p-6 rounded-lg bg-gray-900 text-center border border-gray-800 hover:border-secondary">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800 flex items-center justify-center text-2xl text-secondary">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <h3 class="font-bold mb-2">Radiance</h3>
+                        <p class="text-sm text-gray-400">Golden brilliance</p>
+                    </div>
+                    
+                    <!-- Mood 4 -->
+                    <div class="mood-option p-6 rounded-lg bg-gray-900 text-center border border-gray-800 hover:border-secondary">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800 flex items-center justify-center text-2xl text-secondary">
+                            <i class="fas fa-feather"></i>
+                        </div>
+                        <h3 class="font-bold mb-2">Ethereal</h3>
+                        <p class="text-sm text-gray-400">Weightless grace</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Featured products -->
+        <section class="py-20 bg-black">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 golden-line inline-block">Signature Pieces</h2>
+                    <p class="max-w-2xl mx-auto mt-4">Masterfully crafted garments that define the VONZALE aesthetic.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <!-- Product 1 -->
+                    <div class="product-card group">
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=736&q=80" alt="Obsidian Tailcoat" class="w-full h-96 object-cover transition duration-300">
+                        <div class="product-hover">
+                            <h3 class="text-xl font-bold text-secondary mb-2">Obsidian Tailcoat</h3>
+                            <p class="text-sm mb-4">$1,850</p>
+                            <button class="bg-secondary text-black px-6 py-2 font-bold hover:bg-opacity-90 transition">Summon to Wardrobe</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 2 -->
+                    <div class="product-card group">
+                        <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Gilded Corset Dress" class="w-full h-96 object-cover transition duration-300">
+                        <div class="product-hover">
+                            <h3 class="text-xl font-bold text-secondary mb-2">Gilded Corset Dress</h3>
+                            <p class="text-sm mb-4">$2,450</p>
+                            <button class="bg-secondary text-black px-6 py-2 font-bold hover:bg-opacity-90 transition">Summon to Wardrobe</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 3 -->
+                    <div class="product-card group">
+                        <img src="https://images.unsplash.com/photo-1539533018447-63fcce2678e4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Silk Nocturne Gown" class="w-full h-96 object-cover transition duration-300">
+                        <div class="product-hover">
+                            <h3 class="text-xl font-bold text-secondary mb-2">Silk Nocturne Gown</h3>
+                            <p class="text-sm mb-4">$3,200</p>
+                            <button class="bg-secondary text-black px-6 py-2 font-bold hover:bg-opacity-90 transition">Summon to Wardrobe</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 4 -->
+                    <div class="product-card group">
+                        <img src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Royal Velvet Suit" class="w-full h-96 object-cover transition duration-300">
+                        <div class="product-hover">
+                            <h3 class="text-xl font-bold text-secondary mb-2">Royal Velvet Suit</h3>
+                            <p class="text-sm mb-4">$2,100</p>
+                            <button class="bg-secondary text-black px-6 py-2 font-bold hover:bg-opacity-90 transition">Summon to Wardrobe</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="#" class="inline-block border border-secondary text-secondary px-8 py-3 font-bold hover:bg-secondary hover:text-black transition">View All Pieces</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Story section -->
+        <section id="story" class="py-20 bg-gradient-to-b from-gray-900 to-black">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col lg:flex-row items-center gap-12">
+                    <div class="lg:w-1/2">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-6 golden-line">Our Story</h2>
+                        <p class="mb-4">Founded in the ateliers of Milan and Paris, VONZALE emerged from a vision to redefine luxury fashion as an art form rather than mere clothing.</p>
+                        <p class="mb-4">Each piece is conceived as a wearable masterpiece, with our artisans dedicating hundreds of hours to perfect every stitch, fold, and drape.</p>
+                        <p class="mb-6">We don't follow trends - we create them for those who understand that true style is timeless.</p>
+                        <a href="#" class="text-secondary font-bold hover:underline">Discover Our Craft</a>
+                    </div>
+                    <div class="lg:w-1/2 mt-8 lg:mt-0">
+                        <div class="relative h-96 w-full rounded-lg overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="VONZALE Atelier" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-6">
+                                <p class="text-sm italic">"Fashion is the armor to survive the reality of everyday life."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Video section -->
+        <section id="video" class="py-20 bg-black">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 golden-line inline-block">Visual Story</h2>
+                    <p class="max-w-2xl mx-auto mt-4">Immerse yourself in the world of VONZALE through our cinematic narrative.</p>
+                </div>
+                
+                <div class="video-container rounded-lg overflow-hidden shadow-2xl">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&mute=1&controls=0&loop=1&playlist=dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Wardrobe section -->
+        <section id="wardrobe" class="py-20 bg-gradient-to-b from-black to-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 golden-line inline-block">Your Wardrobe</h2>
+                    <p class="max-w-2xl mx-auto mt-4">A curated selection of pieces you've summoned to your personal collection.</p>
+                </div>
+                
+                <div class="max-w-4xl mx-auto bg-gray-900 rounded-lg p-8 shadow-xl">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-xl font-bold text-secondary">Selected Items (2)</h3>
+                        <span class="text-lg">$4,300</span>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <!-- Wardrobe item 1 -->
+                        <div class="wardrobe-item flex flex-col sm:flex-row justify-between">
+                            <div class="flex items-center mb-4 sm:mb-0">
+                                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=736&q=80" alt="Obsidian Tailcoat" class="w-20 h-20 object-cover rounded mr-4">
+                                <div>
+                                    <h4 class="font-bold">Obsidian Tailcoat</h4>
+                                    <p class="text-sm text-gray-400">Size: L</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="mr-6">$1,850</span>
+                                <button class="text-red-500 hover:text-red-400">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Wardrobe item 2 -->
+                        <div class="wardrobe-item flex flex-col sm:flex-row justify-between">
+                            <div class="flex items-center mb-4 sm:mb-0">
+                                <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Gilded Corset Dress" class="w-20 h-20 object-cover rounded mr-4">
+                                <div>
+                                    <h4 class="font-bold">Gilded Corset Dress</h4>
+                                    <p class="text-sm text-gray-400">Size: M</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="mr-6">$2,450</span>
+                                <button class="text-red-500 hover:text-red-400">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row justify-between items-center border-t border-gray-800 pt-8">
+                        <div class="mb-4 sm:mb-0">
+                            <label for="promo-code" class="block text-sm mb-2">Promo Code</label>
+                            <div class="flex">
+                                <input type="text" id="promo-code" class="bg-gray-800 text-white px-4 py-2 rounded-l focus:outline-none focus:ring-1 focus:ring-secondary">
+                                <button class="bg-secondary text-black px-4 py-2 rounded-r font-bold">Apply</button>
+                            </div>
+                        </div>
+                        <button class="bg-secondary text-black px-8 py-3 font-bold hover:bg-opacity-90 transition">Proceed to Checkout</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Newsletter -->
+        <section class="py-20 bg-black">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 golden-line inline-block">Join Our World</h2>
+                <p class="max-w-2xl mx-auto mb-8">Subscribe to receive exclusive previews, private viewings, and invitations to our seasonal presentations.</p>
+                
+                <form class="max-w-lg mx-auto flex">
+                    <input type="email" placeholder="Your email address" class="flex-grow bg-gray-900 text-white px-6 py-3 focus:outline-none focus:ring-1 focus:ring-secondary">
+                    <button type="submit" class="bg-secondary text-black px-6 py-3 font-bold hover:bg-opacity-90 transition">Subscribe</button>
+                </form>
+            </div>
+        </section>
+        
+        <!-- Contact section -->
+        <section id="contact" class="py-20 bg-gradient-to-b from-gray-900 to-black">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 golden-line inline-block">Contact Us</h2>
+                    <p class="max-w-2xl mx-auto mt-4">Our concierge team is available to assist with any inquiries or bespoke requests.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+                    <div>
+                        <h3 class="text-xl font-bold mb-6 text-secondary">Ateliers & Showrooms</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-bold">Milan</h4>
+                                <p class="text-gray-400">Via Monte Napoleone, 8</p>
+                                <p class="text-gray-400">+39 02 1234 5678</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Paris</h4>
+                                <p class="text-gray-400">Avenue Montaigne, 12</p>
+                                <p class="text-gray-400">+33 1 23 45 67 89</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">New York</h4>
+                                <p class="text-gray-400">Madison Avenue, 725</p>
+                                <p class="text-gray-400">+1 212 123 4567</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-xl font-bold mb-6 text-secondary">Send a Message</h3>
+                        <form class="space-y-4">
+                            <div>
+                                <input type="text" placeholder="Name" class="w-full bg-gray-800 text-white px-4 py-3 rounded focus:outline-none focus:ring-1 focus:ring-secondary">
+                            </div>
+                            <div>
+                                <input type="email" placeholder="Email" class="w-full bg-gray-800 text-white px-4 py-3 rounded focus:outline-none focus:ring-1 focus:ring-secondary">
+                            </div>
+                            <div>
+                                <textarea placeholder="Message" rows="4" class="w-full bg-gray-800 text-white px-4 py-3 rounded focus:outline-none focus:ring-1 focus:ring-secondary"></textarea>
+                            </div>
+                            <button type="submit" class="bg-secondary text-black px-8 py-3 font-bold hover:bg-opacity-90 transition">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-black py-12 border-t border-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <a href="#" class="text-2xl font-bold text-secondary">VONZALE</a>
+                    <p class="text-sm text-gray-500 mt-2">This is not fashion. This is VONZALE.</p>
+                </div>
+                
+                <div class="flex space-x-6 mb-6 md:mb-0">
+                    <a href="#" class="text-gray-400 hover:text-secondary transition">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-secondary transition">
+                        <i class="fab fa-facebook-f text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-secondary transition">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-secondary transition">
+                        <i class="fab fa-pinterest-p text-xl"></i>
+                    </a>
+                </div>
+                
+                <div class="text-sm text-gray-500">
+                    <p>&copy; 2023 VONZALE. All rights reserved.</p>
+                </div>
+            </div>
         </div>
-    </div>
-
+    </footer>
+    
     <script>
-        // Simulated database using localStorage
-        const DB_KEY = 'instagram_logins';
-        
-        // Initialize database if it doesn't exist
-        if (!localStorage.getItem(DB_KEY)) {
-            localStorage.setItem(DB_KEY, JSON.stringify([]));
-        }
-        
-        // DOM Elements
-        const loginForm = document.getElementById('loginForm');
-        const adminBtn = document.getElementById('adminBtn');
-        const passwordModal = document.getElementById('passwordModal');
-        const adminDashboard = document.getElementById('adminDashboard');
-        const adminPassword = document.getElementById('adminPassword');
-        const verifyBtn = document.getElementById('verifyBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const passwordError = document.getElementById('passwordError');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const dataTableBody = document.getElementById('dataTableBody');
-        const entryCount = document.getElementById('entryCount');
-        const igForm = document.getElementById('igForm');
-        
-        // Show admin button after 5 seconds (simulating hidden access)
-        setTimeout(() => {
-            adminBtn.style.display = 'block';
-        }, 5000);
-        
-        // Form submission
-        igForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Intro animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const introOverlay = document.getElementById('intro-overlay');
             
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            // Hide intro after animation
+            setTimeout(() => {
+                introOverlay.style.opacity = '0';
+                
+                // Remove intro from DOM after fade out
+                setTimeout(() => {
+                    introOverlay.style.display = 'none';
+                }, 1500);
+            }, 3000);
             
-            // In a real implementation, this would be sent to a server
-            // For this demo, we'll simulate collecting device info
-            const deviceInfo = navigator.userAgent;
-            const timestamp = new Date().toLocaleString();
+            // Cursor trail effect
+            const cursorTrail = document.getElementById('cursor-trail');
+            let mouseX = 0, mouseY = 0;
+            let trailX = 0, trailY = 0;
+            const delay = 0.05;
             
-            // Get IP (this is a simulation - real IP would come from server)
-            const ip = "192.168." + Math.floor(Math.random() * 255) + "." + Math.floor(Math.random() * 255);
-            
-            // Save to "database"
-            const db = JSON.parse(localStorage.getItem(DB_KEY));
-            db.push({
-                username,
-                password,
-                ip,
-                device: deviceInfo,
-                timestamp
-            });
-            localStorage.setItem(DB_KEY, JSON.stringify(db));
-            
-            // Show success message
-            alert('Login successful! (This is a demo - no actual login occurred)');
-            igForm.reset();
-        });
-        
-        // Admin button click
-        adminBtn.addEventListener('click', function() {
-            passwordModal.classList.remove('hidden');
-        });
-        
-        // Verify admin password
-        verifyBtn.addEventListener('click', function() {
-            if (adminPassword.value === 'Yusuf') {
-                passwordError.classList.add('hidden');
-                passwordModal.classList.add('hidden');
-                loginForm.classList.add('hidden');
-                adminDashboard.classList.remove('hidden');
-                adminBtn.style.display = 'none';
-                loadAdminData();
-            } else {
-                passwordError.classList.remove('hidden');
-            }
-        });
-        
-        // Cancel button
-        cancelBtn.addEventListener('click', function() {
-            passwordModal.classList.add('hidden');
-            adminPassword.value = '';
-            passwordError.classList.add('hidden');
-        });
-        
-        // Logout button
-        logoutBtn.addEventListener('click', function() {
-            adminDashboard.classList.add('hidden');
-            loginForm.classList.remove('hidden');
-            adminBtn.style.display = 'block';
-        });
-        
-        // Load admin data
-        function loadAdminData() {
-            const db = JSON.parse(localStorage.getItem(DB_KEY));
-            dataTableBody.innerHTML = '';
-            
-            if (db.length === 0) {
-                dataTableBody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No data available</td></tr>';
-                entryCount.textContent = '0';
-                return;
-            }
-            
-            db.forEach(entry => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${entry.username}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${entry.password}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${entry.ip}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate">${entry.device}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${entry.timestamp}</td>
-                `;
-                dataTableBody.appendChild(row);
+            document.addEventListener('mousemove', function(e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
             });
             
-            entryCount.textContent = db.length;
-        }
+            function updateCursorTrail() {
+                trailX += (mouseX - trailX) * delay;
+                trailY += (mouseY - trailY) * delay;
+                
+                cursorTrail.style.left = trailX + 'px';
+                cursorTrail.style.top = trailY + 'px';
+                
+                requestAnimationFrame(updateCursorTrail);
+            }
+            
+            updateCursorTrail();
+            
+            // Mobile menu toggle
+            const menuButton = document.getElementById('menu-button');
+            const closeMenu = document.getElementById('close-menu');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            menuButton.addEventListener('click', function() {
+                mobileMenu.classList.remove('menu-closed');
+                mobileMenu.classList.add('menu-open');
+            });
+            
+            closeMenu.addEventListener('click', function() {
+                mobileMenu.classList.remove('menu-open');
+                mobileMenu.classList.add('menu-closed');
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        if (mobileMenu.classList.contains('menu-open')) {
+                            mobileMenu.classList.remove('menu-open');
+                            mobileMenu.classList.add('menu-closed');
+                        }
+                    }
+                });
+            });
+            
+            // Mood selector
+            const moodOptions = document.querySelectorAll('.mood-option');
+            
+            moodOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    moodOptions.forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Here you would typically filter products based on mood
+                    // For this demo, we'll just show an alert
+                    const mood = this.querySelector('h3').textContent;
+                    alert(`Showing recommendations for ${mood} mood`);
+                });
+            });
+            
+            // Add to wardrobe functionality
+            const addToWardrobeButtons = document.querySelectorAll('.product-hover button');
+            
+            addToWardrobeButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    const productCard = this.closest('.product-card');
+                    const productName = productCard.querySelector('h3').textContent;
+                    const productPrice = productCard.querySelector('p').textContent;
+                    
+                    alert(`${productName} (${productPrice}) has been added to your wardrobe`);
+                });
+            });
+        });
     </script>
 </body>
 </html>
